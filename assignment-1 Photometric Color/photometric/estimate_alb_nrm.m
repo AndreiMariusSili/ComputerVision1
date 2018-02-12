@@ -29,17 +29,14 @@ normal = zeros(h, w, 3);
 %   albedo at this point is |g|
 %   normal at this point is g / |g|
 
-
 [X,Y] = meshgrid(1:w,1:h);
 no_points = w*h;
     for index = 1:no_points
         i = image_stack(X(index),Y(index),:);
         i = i(:);
         if shadow_trick
-%             I just can't make the shadow trick to work
-%             scriptI = diag(i);
-%             g = linsolve((scriptI*scriptV),(scriptI*i));
-            g = linsolve(scriptV,i);
+            scriptI = diag(i);
+            g = linsolve((scriptI*scriptV),(scriptI*i));
         else
             g = linsolve(scriptV,i);
         end
@@ -47,6 +44,7 @@ no_points = w*h;
         normal(Y(index),X(index),:) = g/norm(g);
     end
     disp('Done..');
+
 % =========================================================================
 
 end
