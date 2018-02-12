@@ -29,7 +29,7 @@ normal = zeros(h, w, 3);
 %   albedo at this point is |g|
 %   normal at this point is g / |g|
 
-[X,Y] = meshgrid(1:w,1:h);
+[X,Y] = meshgrid(1:h,1:w);
 no_points = w*h;
     for index = 1:no_points
         i = image_stack(X(index),Y(index),:);
