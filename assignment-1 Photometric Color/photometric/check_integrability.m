@@ -16,6 +16,8 @@ SE = zeros(size(normals));
 % p measures value of df / dx
 % q measures value of df / dy
 
+p = normals(:,:,1)./normals(:,:,3);
+q = normals(:,:,2)./normals(:,:,3);
 
 % ========================================================================
 
@@ -31,6 +33,10 @@ q(isnan(q)) = 0;
 % approximate second derivate by neighbor difference
 % and compute the Squared Errors SE of the 2 second derivatives SE
 
+% Adding an extra row so that "show_results(albedo, normals, SE);" runs is
+% probably a hack. I don't know yet.
+ones_row = ones(1, size(SE, 1)); 
+SE =[ones_row; (diff(p) - diff(q)).^2 ];
 
 % ========================================================================
 

@@ -26,7 +26,11 @@ switch path_type
         %   for each element of the row except for leftmost
         %       height_value = previous_height_value + corresponding_p_value
         
-
+        % I believe that in the above algorithm, q should be switched with
+        % q(or there has been an misunderstanding regarding the vector space 
+        % and the used axes); the following line is the implementation of the 
+        % above algorithm, but with q and p switched.
+        height_map = cumsum(q,2) + cumsum(p(:,1)) - p(1,1) - q(:,1);
        
         % =================================================================
                
