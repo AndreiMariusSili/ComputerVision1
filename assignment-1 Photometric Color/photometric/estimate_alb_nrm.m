@@ -29,21 +29,23 @@ normal = zeros(h, w, 3);
 %   albedo at this point is |g|
 %   normal at this point is g / |g|
 
-[X,Y] = meshgrid(1:h,1:w);
-no_points = w*h;
-    for index = 1:no_points
-        i = image_stack(X(index),Y(index),:);
+% warning('off','all')
+for row = 1:h
+    for col = 1:w
+        i = image_stack(row, col, :);
         i = i(:);
-        if shadow_trick
+        if shadow_trick == true
             scriptI = diag(i);
-            g = linsolve((scriptI*scriptV),(scriptI*i));
+            g = linsolve(scriptI * scriptV, scriptI * i);
         else
-            g = linsolve(scriptV,i);
+            g = linsolve(scriptV, i);
         end
-        albedo(Y(index),X(index)) = norm(g);
-        normal(Y(index),X(index),:) = g/norm(g);
+        albedo(row, col) = norm(g);
+        normal(row, col, :) = g / norm(g);
     end
-    disp('Done..');
+end
+% warning('on','all')
+disp('Done..');
 
 % =========================================================================
 

@@ -35,8 +35,8 @@ q(isnan(q)) = 0;
 
 % Adding an extra row so that "show_results(albedo, normals, SE);" runs is
 % probably a hack. I don't know yet.
-ones_row = ones(1, size(SE, 1)); 
-SE =[ones_row; (diff(p) - diff(q)).^2 ];
+SE =(diff(p) - diff(q)).^2;
+SE = [SE(1,:);SE];
 
 % ========================================================================
 

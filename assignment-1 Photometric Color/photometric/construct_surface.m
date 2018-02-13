@@ -21,38 +21,42 @@ switch path_type
         % top left corner of height_map is zero
         % for each pixel in the left column of height_map
         %   height_value = previous_height_value + corresponding_q_value
-        
+        for row = 2:h
+            height_map(row, 1) = height_map(row-1, 1) + q(row, 1);
+        end
         % for each row
         %   for each element of the row except for leftmost
         %       height_value = previous_height_value + corresponding_p_value
+        for col = 2:w
+            height_map(:, col) = height_map(:, col-1) + p(:, col);
+        end
         
-        % I believe that in the above algorithm, q should be switched with
-        % q(or there has been an misunderstanding regarding the vector space 
-        % and the used axes); the following line is the implementation of the 
-        % above algorithm, but with q and p switched.
-        height_map = cumsum(q,2) + cumsum(p(:,1)) - p(1,1) - q(:,1);
-       
         % =================================================================
-               
+        
     case 'row'
         
         % =================================================================
         % YOUR CODE GOES HERE
+        for col = 2:w
+            height_map(1, col) = height_map(1, col-1) + p(1, col);
+        end
         
-         height_map = -( cumsum(p,1) + cumsum(q(1,:)) - q(1,1) - p(1,:));
-
+        for row = 2:h
+            height_map(row, :) = height_map(row-1, :) + q(row, :);
+        end
+        
+        
         % =================================================================
-          
+        
     case 'average'
         
         % =================================================================
         % YOUR CODE GOES HERE
         
-        height_map = ((cumsum(q,2) + cumsum(p(:,1)) - p(1,1) - q(:,1)) - (cumsum(p,1) + cumsum(q(1,:)) - q(1,1) - p(1,:)))/2;
+        height_map = (construct_surface(p, q, 'column') - construct_surface(p, q, 'row')) / 2;
         
         % =================================================================
 end
 
 
 end
-
