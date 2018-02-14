@@ -2,20 +2,31 @@
 
 clear
 clc
-close all
+
 
 I = imread('peppers.png');
 
+% close all
+figure('Name','Opponent')
 J = ConvertColorSpace(I,'opponent');
+visualize(J);
  
 % close all
-% J = ConvertColorSpace(I,'rgb');
+figure('Name','Normalised RGB')
+J = ConvertColorSpace(I,'rgb');
+visualize(J);
 
 % close all
-% J = ConvertColorSpace(I,'hsv');
+figure('Name', 'HSV')
+J = ConvertColorSpace(I,'hsv');
+visualize(J);
 
 % close all
-% J = ConvertColorSpace(I,'ycbcr');
+figure('Name', 'YCBCR');
+J = ConvertColorSpace(I,'ycbcr');
+visualize(J);
 
 % close all
-% J = ConvertColorSpace(I,'gray');
+figure('Name', 'Gray')
+J = ConvertColorSpace(I,'gray');
+visualize(J);
