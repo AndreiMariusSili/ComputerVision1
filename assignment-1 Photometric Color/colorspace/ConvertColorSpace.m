@@ -34,6 +34,6 @@ else
     return;
 end
 
-visualize(new_image, colorspace); % fill in this function
+visualize(new_image); % fill in this function
 
 end

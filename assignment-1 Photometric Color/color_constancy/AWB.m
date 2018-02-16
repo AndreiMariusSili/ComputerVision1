@@ -1,22 +1,3 @@
-% A = imread('awb.jpg');
-% A = im2double(A);
-% A_lin = rgb2lin(A);
-% 
-% percentiles = 0;
-% illuminant = illumgray(A_lin,percentiles);
-% B_lin = chromadapt(A_lin,illuminant,'ColorSpace','linear-rgb');
-% 
-% B = lin2rgb(B_lin);
-% 
-% figure
-% subplot(1,2,1)
-% imshow(A)
-% title('Original image');
-% subplot(1,2,2)
-% imshow(B,'InitialMagnification',25)
-% title(['White-Balanced Image Using Gray World with percentiles=[' ...
-%     num2str(percentiles) ' ' num2str(percentiles) ']'])
-
 A = imread('awb.jpg');
 A = im2double(A);
 
@@ -45,4 +26,4 @@ new_image(:,:,3) = B;
 
 subplot(1,2,2)
 imshow(new_image)
-title('Corected image');
+title('Corrected image');

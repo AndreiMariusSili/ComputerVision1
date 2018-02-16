@@ -5,6 +5,8 @@ ball_original = imread('ball.png');
 ball_recoloured_reflectance = zeros(size(ball_original));
 ball_reconstructed = uint16(zeros(size(ball_original)));
 
+[h, w, n] = size(ball_original);
+
 pure_green = [0;255;0];
 magenta = [255;0;255];
 
@@ -21,6 +23,10 @@ end
     
     
 subplot(2,2,1), imshow(ball_original);
+title('Original image');
 subplot(2,2,2), imshow(ball_reconstructed);
+title('Reconstructed image');
 subplot(2,2,3), imshow(ball_recoloured_reflectance);
+title('Recoloured reflectance');
 subplot(2,2,4), imshow(ball_shading);
+title('Shading');

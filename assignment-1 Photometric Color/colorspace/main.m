@@ -6,7 +6,6 @@ close all
 
 I = imread('peppers.png');
 
-figure('Name','Opponent')
 J = ConvertColorSpace(I,'opponent');
  
 % close all
