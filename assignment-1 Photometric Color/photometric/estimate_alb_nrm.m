@@ -9,7 +9,7 @@ function [ albedo, normal ] = estimate_alb_nrm( image_stack, scriptV, shadow_tri
 %   normal : the surface normal
 
 
-[h, w, ~] = size(image_stack);
+[h, w, n, c] = size(image_stack);
 if nargin == 2
     shadow_trick = true;
 end
@@ -17,7 +17,7 @@ end
 % create arrays for 
 %   albedo (1 channel)
 %   normal (3 channels)
-albedo = zeros(h, w, 1);
+albedo = zeros(h, w, c);
 normal = zeros(h, w, 3);
 
 % =========================================================================
@@ -32,18 +32,23 @@ normal = zeros(h, w, 3);
 % warning('off','all')
 for row = 1:h
     for col = 1:w
-        i = image_stack(row, col, :);
-        i = i(:);
-        if shadow_trick == true
-            scriptI = diag(i);
-            g = linsolve(scriptI * scriptV, scriptI * i);
-        else
-            g = linsolve(scriptV, i);
+        for channel = 1:c
+            i = image_stack(row, col, :, channel);
+            i = i(:);
+            if shadow_trick == true
+                scriptI = diag(i);
+                g = linsolve(scriptI * scriptV, scriptI * i);
+            else
+                g = linsolve(scriptV, i);
+            end
+            albedo(row, col, channel) = norm(g);
+            nn = (g / norm(g));
+            nn(isnan(nn)) = 0;
+            normal(row, col, :) = squeeze(normal(row, col,:)) + nn;
         end
-        albedo(row, col) = norm(g);
-        normal(row, col, :) = g / norm(g);
     end
 end
+normal = normal ./ 3;
 % warning('on','all')
 disp('Done..');
 

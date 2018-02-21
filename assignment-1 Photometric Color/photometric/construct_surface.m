@@ -21,6 +21,7 @@ switch path_type
         % top left corner of height_map is zero
         % for each pixel in the left column of height_map
         %   height_value = previous_height_value + corresponding_q_value
+        
         for row = 2:h
             height_map(row, 1) = height_map(row-1, 1) + q(row, 1);
         end

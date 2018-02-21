@@ -6,28 +6,37 @@ disp('Part 1: Photometric Stereo')
 
 % obtain many images in a fixed view under different illumination
 disp('Loading images...')
-image_dir = './SphereGray25/';   % TODO: get the path of the script
+image_dir = './SphereGray5/';   % TODO: get the path of the script
 %image_ext = '*.png';
 
-[image_stack, scriptV] = load_syn_images(image_dir);
-[h, w, n] = size(image_stack);
+is_color = strcmp(image_dir,'./SphereColor/') || strcmp(image_dir,'./MonkeyColor/');
+
+if is_color
+    [image_stack, ~] = load_syn_images(image_dir);
+    [image_stack2, ~] = load_syn_images(image_dir,2);
+    [image_stack3, scriptV] = load_syn_images(image_dir,3);
+    image_stack = cat(4,image_stack,image_stack2,image_stack3);
+else
+    [image_stack, scriptV] = load_syn_images(image_dir);
+end
+
+[h, w, n, c] = size(image_stack);
 fprintf('Finish loading %d images.\n\n', n);
 
 % compute the surface gradient from the stack of imgs and light source mat
 disp('Computing surface albedo and normal map...')
 [albedo, normals] = estimate_alb_nrm(image_stack, scriptV);
-imwrite(albedo, 'albedo/albedo_25.png')
 
 %% integrability check: is (dp / dy  -  dq / dx) ^ 2 small everywhere?
 disp('Integrability checking')
 [p, q, SE] = check_integrability(normals);
 
-threshold = 0.05;
+threshold = 0.005;
 SE(SE <= threshold) = NaN; % for good visualization
 fprintf('Number of outliers: %d\n\n', sum(sum(SE > threshold)));
 
 %% compute the surface height
-height_map = construct_surface( p, q, 'column' );
+height_map = construct_surface( p, q, 'average' );
 
 %% Display
 show_results(albedo, normals, SE);
@@ -50,8 +59,8 @@ SE(SE <= threshold) = NaN; % for good visualization
 fprintf('Number of outliers: %d\n\n', sum(sum(SE > threshold)));
 
 %% compute the surface height
-height_map = construct_surface( p, q );
+height_map = construct_surface( p, q, 'average' );
 
 show_results(albedo, normals, SE);
 show_model(albedo, height_map);
-
+    
