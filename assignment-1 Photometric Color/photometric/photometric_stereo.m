@@ -22,12 +22,12 @@ imwrite(albedo, 'albedo/albedo_25.png')
 disp('Integrability checking')
 [p, q, SE] = check_integrability(normals);
 
-threshold = 0.005;
+threshold = 0.05;
 SE(SE <= threshold) = NaN; % for good visualization
 fprintf('Number of outliers: %d\n\n', sum(sum(SE > threshold)));
 
 %% compute the surface height
-height_map = construct_surface( p, q, 'row' );
+height_map = construct_surface( p, q, 'column' );
 
 %% Display
 show_results(albedo, normals, SE);
@@ -39,7 +39,7 @@ show_model(albedo, height_map);
 [h, w, n] = size(image_stack);
 fprintf('Finish loading %d images.\n\n', n);
 disp('Computing surface albedo and normal map...')
-[albedo, normals] = estimate_alb_nrm(image_stack, scriptV);
+[albedo, normals] = estimate_alb_nrm(image_stack, scriptV, false);
 
 %% integrability check: is (dp / dy  -  dq / dx) ^ 2 small everywhere?
 disp('Integrability checking')
