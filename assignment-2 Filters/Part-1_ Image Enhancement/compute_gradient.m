@@ -3,12 +3,13 @@ function [Gx, Gy, im_magnitude,im_direction] = compute_gradient(image)
     g_x = [1 0 -1; 2 0 -2; 1 0 -1];
     g_y = g_x';
     
-    Gx = imfilter(im2double(image), g_x);
-    Gy = imfilter(im2double(image), g_y);
+    Gx = conv2(image, g_x, 'same');
+    Gy = conv2(image, g_y, 'same');
     
-    im_magnitude = sqrt(Gx.^2 + Gy.^2);
+    im_magnitude = mat2gray(sqrt(Gx.^2 + Gy.^2));
+    im_direction = mat2gray(-atan2(Gy, Gx));
     
-    im_direction = 1./tag(Gy, Gx);
-    
+    Gx = mat2gray(Gx);
+    Gy = mat2gray(Gy);
 end
 
