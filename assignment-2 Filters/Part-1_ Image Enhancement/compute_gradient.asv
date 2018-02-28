@@ -8,7 +8,7 @@ function [Gx, Gy, im_magnitude,im_direction] = compute_gradient(image)
     
     im_magnitude = sqrt(Gx.^2 + Gy.^2);
     
-    im_direction = 1./tag(Gy, Gx);
-    
+    im_direction = 1./tan(Gy./Gx);
+
 end
 
