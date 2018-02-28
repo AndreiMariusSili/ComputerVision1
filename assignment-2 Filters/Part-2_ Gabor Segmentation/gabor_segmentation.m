@@ -3,7 +3,7 @@ clear
 clc
 k        = 2;      % number of clusters in k-means algorithm. By default, 
                    % we consider k to be 2 in foreground-background segmentation task.
-image_id = 'Kobi'; % Identifier to switch between input images.
+image_id = 'Cows'; % Identifier to switch between input images.
                    % Possible ids: 'Kobi',    'Polar', 'Robin-1'
                    %               'Robin-2', 'Cows'
 
@@ -171,14 +171,20 @@ lambdaMax = hypot(numRows,numCols);
 n = floor(log2(lambdaMax/lambdaMin));
 lambdas = 2.^(0:(n-2)) * lambdaMin;
 
+lambdas = lambdas(1:2);
+
 % Define the set of orientations for the Gaussian envelope.
 dTheta      = pi/4;                  % \\ the step size LOL pi/4 is not good enough for you
-orientations = -pi/2:dTheta:(pi/2);
+% orientations = -pi/2:dTheta:(pi/2);
+orientations = [pi/2];
 
 % Define the set of sigmas for the Gaussian envelope. Sigma here defines 
 % the standard deviation, or the spread of the Gaussian. 
-sigmas = [0.5,1,2,3,4];
+% sigmas = [0.5,1,2,3,4];
+sigmas = [1,2];
 
+
+gammas  = [0.25, 0.5, 0.75, 1];
 % Now you can create the filterbank. We provide you with a MATLAB struct
 % called gaborFilterBank in which we will hold the filters and their
 % corresponding parameters such as sigma, lambda and etc. 
@@ -189,26 +195,28 @@ tic
 filterNo = 1;
 for ii = 1:length(lambdas)
     for jj  = 1:length(sigmas)
-        for ll = 1:length(orientations)
-            % Filter parameter configuration for this filter.
-            lambda = lambdas(ii);
-            sigma  = sigmas(jj);
-            theta  = orientations(ll);
-            psi    = 0;
-            gamma  = 0.5;
-            
-            % Create a Gabor filter with the specs above. 
-            % (We also record the settings in which they are created. )
-            % // TODO: Implement the function createGabor() following
-            %          the guidelines in the given function template.
-            %          ** See createGabor.m for instructions ** //
-            gaborFilterBank(filterNo).filterPairs = createGabor( sigma, theta, lambda, psi, gamma );
-            gaborFilterBank(filterNo).sigma       = sigma;
-            gaborFilterBank(filterNo).lambda      = lambda;
-            gaborFilterBank(filterNo).theta       = theta;
-            gaborFilterBank(filterNo).psi         = psi;
-            gaborFilterBank(filterNo).gamma       = gamma;
-            filterNo = filterNo+1;
+        for kk = 1:length(gammas)
+            for ll = 1:length(orientations)
+                % Filter parameter configuration for this filter.
+                lambda = lambdas(ii);
+                sigma  = sigmas(jj);
+                gamma = gammas(kk);
+                theta  = orientations(ll);
+                psi    = 0;
+
+                % Create a Gabor filter with the specs above. 
+                % (We also record the settings in which they are created. )
+                % // TODO: Implement the function createGabor() following
+                %          the guidelines in the given function template.
+                %          ** See createGabor.m for instructions ** //
+                gaborFilterBank(filterNo).filterPairs = createGabor( sigma, theta, lambda, psi, gamma );
+                gaborFilterBank(filterNo).sigma       = sigma;
+                gaborFilterBank(filterNo).lambda      = lambda;
+                gaborFilterBank(filterNo).theta       = theta;
+                gaborFilterBank(filterNo).psi         = psi;
+                gaborFilterBank(filterNo).gamma       = gamma;
+                filterNo = filterNo+1;
+            end
         end
     end
 end
@@ -229,12 +237,12 @@ for jj = 1 : length(gaborFilterBank)
     imag_out = imfilter(img_gray, gaborFilterBank(jj).filterPairs(:,:,2));
     featureMaps{jj} = cat(3, real_out, imag_out);
     
-    imwrite(real_out, sprintf('analysis/question_5/%s/filter_l%f_t%f_s%f_real.png', ...
-            image_id, gaborFilterBank(jj).lambda, gaborFilterBank(jj).theta, gaborFilterBank(jj).sigma))
-    imwrite(imag_out, sprintf('analysis/question_5/%s/filter_l%f_t%f_s%f_imag.png', ...
-            image_id, gaborFilterBank(jj).lambda, gaborFilterBank(jj).theta, gaborFilterBank(jj).sigma))
+    imwrite(real_out, sprintf('analysis/question_5/%s/filter_l%f_t%f_s%f_g%f_real.png', ...
+            image_id, gaborFilterBank(jj).lambda, gaborFilterBank(jj).theta, gaborFilterBank(jj).sigma, gaborFilterBank(jj).gamma))
+    imwrite(imag_out, sprintf('analysis/question_5/%s/filter_l%f_t%f_s%f_g%f_imag.png', ...
+            image_id, gaborFilterBank(jj).lambda, gaborFilterBank(jj).theta, gaborFilterBank(jj).sigma, gaborFilterBank(jj).gamma))
     if visFlag
-        figure(2),
+        figure(2)
         subplot(121), imshow(real_out), title(sprintf('Re[h(x,y)], \\lambda = %f, \\theta = %f, \\sigma = %f', ...
             gaborFilterBank(jj).lambda,...
             gaborFilterBank(jj).theta,...
