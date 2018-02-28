@@ -20,6 +20,6 @@ switch LOG_type
         imOut = imFilterHigh - imFilterLow;
 end
 figure
-imshow(imOut, [])
+imshow(imOut)
 end
 

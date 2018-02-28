@@ -3,7 +3,7 @@ clear
 clc
 k        = 2;      % number of clusters in k-means algorithm. By default, 
                    % we consider k to be 2 in foreground-background segmentation task.
-image_id = 'Cows'; % Identifier to switch between input images.
+image_id = 'Kobi'; % Identifier to switch between input images.
                    % Possible ids: 'Kobi',    'Polar', 'Robin-1'
                    %               'Robin-2', 'Cows'
 
@@ -11,7 +11,7 @@ image_id = 'Cows'; % Identifier to switch between input images.
 err_msg  = 'Image not available.';
 
 % Control settings
-visFlag       = false;    %  Set to true to visualize filter responses.
+visFlag       = true;    %  Set to true to visualize filter responses.
 smoothingFlag = true;   %  Set to true to postprocess filter outputs.
 
 %% Read image
@@ -42,7 +42,7 @@ end
 
 % Image adjustments
 img      = imresize(img,resize_factor);
-img_gray = rgb2gray(img);
+img_gray = im2double(rgb2gray(img));
 
 % Display image
 % figure(1), imshow(img), title(sprintf('Input image: %s', image_id));
@@ -261,12 +261,12 @@ featureMags =  cell(length(gaborFilterBank),1);
 for jj = 1:length(featureMaps)
     real_part = featureMaps{jj}(:,:,1);
     imag_part = featureMaps{jj}(:,:,2);
-    featureMags{jj} = (double(real_part) .^2 + double(imag_part) .^2).^(1/2);
+    featureMags{jj} = (im2double(real_part) .^2 + im2double(imag_part) .^2).^(1/2);
     
     % Visualize the magnitude response if you wish.
     if visFlag
         figure(3)
-        imshow(uint8(featureMags{jj})), title(sprintf('Re[h(x,y)], \\lambda = %f, \\theta = %f, \\sigma = %f', ...
+        imshow(im2double(featureMags{jj})), title(sprintf('Re[h(x,y)], \\lambda = %f, \\theta = %f, \\sigma = %f', ...
         gaborFilterBank(jj).lambda,...
         gaborFilterBank(jj).theta,...
         gaborFilterBank(jj).sigma));
@@ -292,6 +292,9 @@ if smoothingFlag
         % i)  filter the magnitude response with appropriate Gaussian kernels
         % ii) insert the smoothed image into features(:,:,jj)
     %END_FOR
+    for jj = 1:length(featureMags)
+        features(:,:,jj) =  imgaussfilt(featureMags{jj}, 0.5);
+    end
 else
     % Don't smooth but just insert magnitude images into the matrix
     % called features.
@@ -311,10 +314,10 @@ features = reshape(features, numRows * numCols, []);
 % Standardize features. 
 % \\ Hint: see http://ufldl.stanford.edu/wiki/index.php/Data_Preprocessing
 %          for more information. \\
-
-features = 0; % \\ TODO: i)  Implement standardization on matrix called features. 
-             %          ii) Return the standardized data matrix.
-
+% \\ TODO: i)  Implement standardization on matrix called features. 
+%          ii) Return the standardized data matrix.
+features = (features - mean(features)) ./ std(features);
+ 
 
 % (Optional) Visualize the saliency map using the first principal component 
 % of the features matrix. It will be useful to diagnose possible problems 
@@ -331,7 +334,7 @@ imshow(feature2DImage,[]), title('Pixel representation projected onto first PC')
 % \\ Hint-2: use the parameter k defined in the first section when calling
 %            MATLAB's built-in kmeans function.
 tic
-pixLabels = 0; % \\TODO: Return cluster labels per pixel
+pixLabels = kmeans(features, k); % \\TODO: Return cluster labels per pixel
 ctime = toc;
 fprintf('Clustering completed in %.3f seconds.\n', ctime);
 
@@ -341,7 +344,7 @@ fprintf('Clustering completed in %.3f seconds.\n', ctime);
 % input size [numRows numCols].
 pixLabels = reshape(pixLabels,[numRows numCols]);
 
-figure(5)
+figure
 imshow(label2rgb(pixLabels)), title('Pixel clusters');
 
 
