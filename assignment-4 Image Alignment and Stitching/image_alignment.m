@@ -5,3 +5,11 @@ boat2 = single(imread('./boat2.pgm'));
 [f2,d2] = vl_sift(boat2) ;
 
 [matches, scores] = vl_ubcmatch(d1, d2) ;
+
+N = 100;
+P = 50;
+
+for i  = 1:N
+    perm = randperm(matches) ;
+    sel = perm(1:P);
+end
