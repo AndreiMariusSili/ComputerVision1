@@ -40,7 +40,7 @@ function [xs,ys,us,vs] = lucas_kanade(img1, img2, xy)
         i = X(ii);
         j = Y(ii);
         
-        if (i-half < 1) || (i+half > h+1) || (j-half < 1) || (j+half > w+1)
+        if (i-half < 1) || (i+half > h) || (j-half < 1) || (j+half > w)
             xs = [xs;j];
             ys = [ys;i];
             us = [us;0];
