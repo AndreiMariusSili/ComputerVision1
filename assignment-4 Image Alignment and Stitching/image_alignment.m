@@ -4,4 +4,4 @@ boat1 = single(imread('./boat1.pgm'));
 boat2 = single(imread('./boat2.pgm')); 
 [f2,d2] = vl_sift(boat2) ;
 
-[matches, scores] = vl_ubcmatch(da, db) ;
+[matches, scores] = vl_ubcmatch(d1, d2) ;
