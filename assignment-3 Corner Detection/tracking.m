@@ -29,7 +29,7 @@ for k = 1:length(files)-1
       imwrite(imind,cm,result_path,'gif','WriteMode','append');
     end
     
-    r = round(r + vs);
-    c = round(c + us);
+    r = r + vs;
+    c = c + us;
 end
 disp('done');

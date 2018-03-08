@@ -20,9 +20,9 @@ function [xs,ys,us,vs] = lucas_kanade(img1, img2, xy)
             Y = Y(:);
         case 3
             x_range = xy(:, 1);
-            X = x_range(:);
+            X = round(x_range(:));
             y_range = xy(:, 2);
-            Y = y_range(:);
+            Y = round(y_range(:));
     end
 
     xs = [];
@@ -34,7 +34,6 @@ function [xs,ys,us,vs] = lucas_kanade(img1, img2, xy)
     Ix_m = conv2(img1_gray,[-1 1; -1 1], 'same'); % partial on x
     Iy_m = conv2(img1_gray, [-1 -1; 1 1], 'same'); % partial on y
     It_m = conv2(img1_gray, ones(2), 'same') + conv2(img2_gray, -ones(2), 'same'); % partial on t
-
     
     for ii = 1:length(X)
         i = X(ii);
@@ -55,7 +54,7 @@ function [xs,ys,us,vs] = lucas_kanade(img1, img2, xy)
         A = [Ix(:), Iy(:)];
         b = -It(:);
     
-        v = pinv(A)*b;        
+        v = pinv(A)*b;
         
         xs = [xs;j];
         ys = [ys;i];
