@@ -14,17 +14,9 @@ selected_matches = matches(:,perm(1:50));
 [m1, m2, m3, m4, t1, t2] = RANSAC(boat1,boat2, 100);
 
 
-% http://inside.mines.edu/~whoff/courses/EENG510/lectures/04-InterpolationandSpatialTransforms.pdf
-
-% the section below should be replaced with our implementation.
 I = boat1;
 K = boat2;
-% I am putting minus m2 and minus m3 because it makes the image
-% boat1 to rotate in the other direction. Although, I expected to rotate in
-% the good direction with m2 and m3 as they are.
-tform = maketform('affine',[m1 -m2 0; -m3 m4 0; t1 t2 1]);
-J = imtransform(I,tform);
-
+J = transform(I, m1, m2, m3, m4, t1, t2);
 figure, imshow(I)
 figure, imshow(J)
 figure, imshow(K)
