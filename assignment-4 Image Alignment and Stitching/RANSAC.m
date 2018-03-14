@@ -1,54 +1,82 @@
-function [m1, m2, m3, m4, t1, t2] = RANSAC(img1,img2, N,P)
+function [m1, m2, m3, m4, t1, t2, best_inliers_count] = RANSAC(img1,img2, p, plot)
+    % Returns the transform from image 2 to image 1. So if you call imwarp
+    % like imwarp(img2, T) you should get image 2 from the perspective of
+    % image 1. In other words, the source is img2 and the target is img1 in 
+    % this implementation. This is all because we are actually returning
+    % the parameters for the inverse affine transform.
+    % Check this out: http://www.cse.psu.edu/~rtc12/CSE486/lecture15.pdf 
     
-    if nargin == 2
-        N = 50;
-        P = 50;
-    end
     if nargin == 3
-        P = 50;
+        plot = false;
     end
 
-    [f1,d1,f2,d2,matches,scores] = keypoint_matching(img1,img2);
-
-    best_inliers = 0;
-    best_transformation = [];
-    for i  = 1:N
-        perm = randperm(size(matches, 2)) ;
-        selected_matches = matches(:,perm(1:P));
-
-        first_points = f1(:, selected_matches(1,:));
-        first_points = first_points(1:2,:);
-        second_points = f2(:,selected_matches(2,:));
-        second_points = second_points(1:2,:);
-
-        A = [];
-        b = [];
-        for j= 1:size(first_points,2)
-            A = [A; first_points(1,j) first_points(2,j) 0 0 1 0; 0 0 first_points(1,j) first_points(2,j) 0 1];
-            b = [b; second_points(1,j); second_points(2,j)];
-        end
-
-        result = num2cell(pinv(A)*b);
-        [m1, m2, m3, m4, t1, t2] = result{:};
-
-        translated_first_points= [m1 m2; m3 m4] * [first_points(1,:); first_points(2,:)] + [t1;t2];
-
-    %     plot_images(boat1,boat2, first_points(1,:), first_points(2,:), translated_first_points(1,:), translated_first_points(2,:));
-
-        inliers_count = count_inliers(first_points, translated_first_points);
-
-        if inliers_count > best_inliers
-            best_inliers = inliers_count;
-            best_transformation = [m1, m2, m3, m4, t1, t2];
-        end
-
+    [f1,~,f2,~,matches,~] = keypoint_matching(img1,img2);
+    if p < 1
+        n = size(matches, 2);
+        s = 3;
+        e = s/n;
+        N = round(log(1-p)/log(1-(1-e)^s));
+    else
+        n = size(matches, 2);
+        s = 3;
+        e = s/n;
+        N = p;
     end
     
-    m1=best_transformation(1);
-    m2=best_transformation(2);
-    m3=best_transformation(3);
-    m4=best_transformation(4);
-    t1=best_transformation(5);
-    t2=best_transformation(6);
+    all_first_points = f1(:, matches(1,:));
+    all_first_points = all_first_points(1:2,:);
+    all_second_points = f2(:, matches(2,:));
+    all_second_points = all_second_points(1:2,:);
+
+    ransac_best_count = 0;
+    for i  = 1:N
+        perm = randperm(size(matches, 2));
+        selected_matches = matches(:,perm(1:s));
+
+        selected_first_points = f1(:, selected_matches(1,:));
+        selected_first_points = selected_first_points(1:2,:);
+        selected_second_points = f2(:,selected_matches(2,:));
+        selected_second_points = selected_second_points(1:2,:);
+        
+        [m1, m2, m3, m4, t1, t2] = solve_least_squares(selected_first_points, selected_second_points);
+
+        if plot
+            translated_first_points= [m1 m2; m3 m4] * [selected_first_points(1,:); selected_first_points(2,:)] + [t1;t2];
+            plot_images(img1,img2, selected_first_points(1,:), selected_first_points(2,:), translated_first_points(1,:), translated_first_points(2,:));
+        end
+        
+        transformed_all_first_points = [m1 m2; m3 m4] * all_first_points + [t1;t2];
+
+        [inliers_count, inliers] = detect_inliers(all_second_points, transformed_all_first_points);
+        if inliers_count > ransac_best_count
+            ransac_best_count = inliers_count;
+            ransac_best_inliers = inliers;
+        end
+    end
+    
+    if ransac_best_count == 0
+        m1=1;
+        m2=0;
+        m3=0;
+        m4=1;
+        t1=0;
+        t2=0;
+    else
+        best_first_points = all_first_points(:, ransac_best_inliers);
+        best_second_points = all_second_points(:, ransac_best_inliers);
+        [m1, m2, m3, m4, t1, t2] = solve_least_squares(best_first_points, best_second_points);
+        
+        transformed_all_first_points = [m1 m2; m3 m4] * all_first_points + [t1;t2];
+        [~, best_inliers] = detect_inliers(all_second_points, transformed_all_first_points);
+        
+        best_first_points = all_first_points(:, best_inliers);
+        best_second_points = all_second_points(:, best_inliers);
+        
+        [m1, m2, m3, m4, t1, t2] = solve_least_squares(best_first_points, best_second_points);
+        
+        transformed_all_first_points = [m1 m2; m3 m4] * all_first_points + [t1;t2];
+        [best_inliers_count, ~] = detect_inliers(all_second_points, transformed_all_first_points);
+        
+    end
     
 end

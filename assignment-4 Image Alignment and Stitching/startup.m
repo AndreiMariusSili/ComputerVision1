@@ -1,1 +1,1 @@
-run('./vlfeat-0.9.21/toolbox/vl_setup')
+run('./vlfeat-0.9.21-mac/toolbox/vl_setup')
