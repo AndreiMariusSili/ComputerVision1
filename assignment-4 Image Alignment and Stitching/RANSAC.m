@@ -1,14 +1,10 @@
-function [m1, m2, m3, m4, t1, t2, best_inliers_count] = RANSAC(img1,img2, p, plot)
-    % Returns the transform from image 2 to image 1. So if you call imwarp
-    % like imwarp(img2, T) you should get image 2 from the perspective of
-    % image 1. In other words, the source is img2 and the target is img1 in 
-    % this implementation. This is all because we are actually returning
-    % the parameters for the inverse affine transform.
-    % Check this out: http://www.cse.psu.edu/~rtc12/CSE486/lecture15.pdf 
-    
+function [m1, m2, m3, m4, t1, t2, best_inliers_count] = RANSAC(img1,img2, p, plot)    
     if nargin == 3
         plot = false;
     end
+    
+    img1 = double(img1);
+    img2 = double(img2);
 
     [f1,~,f2,~,matches,~] = keypoint_matching(img1,img2);
     if p < 1
@@ -17,9 +13,7 @@ function [m1, m2, m3, m4, t1, t2, best_inliers_count] = RANSAC(img1,img2, p, plo
         e = s/n;
         N = round(log(1-p)/log(1-(1-e)^s));
     else
-        n = size(matches, 2);
         s = 3;
-        e = s/n;
         N = p;
     end
     
