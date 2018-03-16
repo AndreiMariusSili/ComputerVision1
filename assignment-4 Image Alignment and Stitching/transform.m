@@ -30,4 +30,14 @@ function [image] = transform(img1, m1, m2, m3, m4, t1, t2, method)
     end
     
     image = mat2gray(image);
-end
+    
+    % deal with black spots:
+    [h,w,~] = size(image);
+    for i = 1+1:h-2
+        for j= 1+1:w-1
+            if (image(i,j,:) == 0)
+                average = (image(i-1,j,:) +image(i,j-1,:)+image(i+1,j,:)+image(i,j+1,:))/4;
+                image(i,j,:) = average;
+            end
+        end
+    end

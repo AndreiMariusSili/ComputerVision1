@@ -16,7 +16,7 @@ boat2 = imread('./boat2.pgm');
 
 I = boat1;
 K = boat2;
-J = transform(I, m1, m2, m3, m4, t1, t2, 'matlab');
+J = transform(I, m1, m2, m3, m4, t1, t2, 'own');
 figure, imshow(I)
 figure, imshow(J)
 figure, imshow(K)
