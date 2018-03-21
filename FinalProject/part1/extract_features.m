@@ -43,11 +43,176 @@ switch color
                 end
         end
     case 'RGB'
-        throw(MException('Color: BadValue', 'RGB-SIFT not implemented yet.'));
+        % Create cell matching data dimensionality.
+        features = cell(no_categories, category_size, 2);
+        switch method
+            case 'keypoint'
+                % Get descriptors for each image and store the matching
+                % cell array.
+                for i = 1:no_categories
+                    for j = 1:category_size
+                        if size(data{i,j},3) == 3
+                            I = single(rgb2gray(data{i,j}));
+                            [frames] = vl_sift(I);
+                            % For each feature in grayscale, compute
+                            % descriptors for R, G and B.
+                            transformed_I = data{i,j};
+                            [f_R,d_R] = vl_sift(single(transformed_I(:,:,1)),'frames',frames, 'orientations');
+                            [f_G,d_G] = vl_sift(single(transformed_I(:,:,2)),'frames',frames, 'orientations');
+                            [f_B,d_B] = vl_sift(single(transformed_I(:,:,3)),'frames',frames, 'orientations');
+                            features(i,j,:) = {[f_R,f_G,f_B], [d_R,d_G,d_B]};
+
+                        else
+                            I = single(data{i,j});
+                            [frames, descriptors] = vl_sift(I);
+                            % Grayscale image: so, for all channels, the features
+                            % and descriptors are the same, and we already
+                            % computed them.
+                            features(i,j,:) = {[frames,frames,frames], [descriptors,descriptors,descriptors]};
+                        end
+                    end
+                end
+            case 'dense'
+                % Get descriptors for each image and store the matching
+                % cell array.
+                for i = 1:no_categories
+                    for j = 1:category_size
+                        if size(data{i,j},3) == 3
+                            I = single(rgb2gray(data{i,j}));
+                            [frames] = vl_dsift(I, 'step', 10);
+                            % For each feature in grayscale, compute
+                            % descriptors for R, G and B.
+                            transformed_I = data{i,j};
+                            [f_R,d_R] = vl_sift(single(transformed_I(:,:,1)),'frames',frames, 'orientations');
+                            [f_G,d_G] = vl_sift(single(transformed_I(:,:,2)),'frames',frames, 'orientations');
+                            [f_B,d_B] = vl_sift(single(transformed_I(:,:,3)),'frames',frames, 'orientations');
+                            features(i,j,:) = {[f_R,f_G,f_B], [d_R,d_G,d_B]};
+
+                        else
+                            I = single(data{i,j});
+                            [frames, descriptors] = vl_dsift(I, 'step', 10);
+                            % Grayscale image: so, for all channels, the features
+                            % and descriptors are the same, and we already
+                            % computed them.
+                            features(i,j,:) = {[frames,frames,frames], [descriptors,descriptors,descriptors]};
+                        end
+                    end
+                end
+        end
     case 'rgb'
-        throw(MException('Color: BadValue', 'rgb-SIFT not implemented yet.'));
+        % Create cell matching data dimensionality.
+        features = cell(no_categories, category_size, 2);
+        switch method
+            case 'keypoint'
+                % Get descriptors for each image and store the matching
+                % cell array.
+                for i = 1:no_categories
+                    for j = 1:category_size
+                        if size(data{i,j},3) == 3
+                            I = single(rgb2gray(data{i,j}));
+                            [frames] = vl_sift(I);
+                            % For each feature in grayscale, compute
+                            % descriptors for R, G and B.
+                            transformed_I = rgb2normedrgb(data{i,j});
+                            [f_R,d_R] = vl_sift(single(transformed_I(:,:,1)),'frames',frames, 'orientations');
+                            [f_G,d_G] = vl_sift(single(transformed_I(:,:,2)),'frames',frames, 'orientations');
+                            [f_B,d_B] = vl_sift(single(transformed_I(:,:,3)),'frames',frames, 'orientations');
+                            features(i,j,:) = {[f_R,f_G,f_B], [d_R,d_G,d_B]};
+
+                        else
+                            I = single(data{i,j});
+                            [frames, descriptors] = vl_sift(I);
+                            % Grayscale image: so, for all channels, the features
+                            % and descriptors are the same, and we already
+                            % computed them.
+                            features(i,j,:) = {[frames,frames,frames], [descriptors,descriptors,descriptors]};
+                        end
+                    end
+                end
+            case 'dense'
+                % Get descriptors for each image and store the matching
+                % cell array.
+                for i = 1:no_categories
+                    for j = 1:category_size
+                        if size(data{i,j},3) == 3
+                            I = single(rgb2gray(data{i,j}));
+                            [frames] = vl_dsift(I, 'step', 10);
+                            % For each feature in grayscale, compute
+                            % descriptors for R, G and B.
+                            transformed_I = rgb2normedrgb(data{i,j});
+                            [f_R,d_R] = vl_sift(single(transformed_I(:,:,1)),'frames',frames, 'orientations');
+                            [f_G,d_G] = vl_sift(single(transformed_I(:,:,2)),'frames',frames, 'orientations');
+                            [f_B,d_B] = vl_sift(single(transformed_I(:,:,3)),'frames',frames, 'orientations');
+                            features(i,j,:) = {[f_R,f_G,f_B], [d_R,d_G,d_B]};
+
+                        else
+                            I = single(data{i,j});
+                            [frames, descriptors] = vl_dsift(I, 'step', 10);
+                            % Grayscale image: so, for all channels, the features
+                            % and descriptors are the same, and we already
+                            % computed them.
+                            features(i,j,:) = {[frames,frames,frames], [descriptors,descriptors,descriptors]};
+                        end
+                    end
+                end
+        end
     case 'opponent'
-        throw(MException('Color: BadValue', 'opponent-SIFT not implemented yet.'));
+        % Create cell matching data dimensionality.
+        features = cell(no_categories, category_size, 2);
+        switch method
+            case 'keypoint'
+                % Get descriptors for each image and store the matching
+                % cell array.
+                for i = 1:no_categories
+                    for j = 1:category_size
+                        if size(data{i,j},3) == 3
+                            I = single(rgb2gray(data{i,j}));
+                            [frames] = vl_sift(I);
+                            % For each feature in grayscale, compute
+                            % descriptors for R, G and B.
+                            transformed_I = rgb2opponent(data{i,j});
+                            [f_R,d_R] = vl_sift(single(transformed_I(:,:,1)),'frames',frames, 'orientations');
+                            [f_G,d_G] = vl_sift(single(transformed_I(:,:,2)),'frames',frames, 'orientations');
+                            [f_B,d_B] = vl_sift(single(transformed_I(:,:,3)),'frames',frames, 'orientations');
+                            features(i,j,:) = {[f_R,f_G,f_B], [d_R,d_G,d_B]};
+
+                        else
+                            I = single(data{i,j});
+                            [frames, descriptors] = vl_sift(I);
+                            % Grayscale image: so, for all channels, the features
+                            % and descriptors are the same, and we already
+                            % computed them.
+                            features(i,j,:) = {[frames,frames,frames], [descriptors,descriptors,descriptors]};
+                        end
+                    end
+                end
+            case 'dense'
+                % Get descriptors for each image and store the matching
+                % cell array.
+                for i = 1:no_categories
+                    for j = 1:category_size
+                        if size(data{i,j},3) == 3
+                            I = single(rgb2gray(data{i,j}));
+                            [frames, ~] = vl_dsift(I, 'step', 10);
+                            % For each feature in grayscale, compute
+                            % descriptors for R, G and B.
+                            transformed_I = rgb2opponent(data{i,j});
+                            [f_R,d_R] = vl_sift(single(transformed_I(:,:,1)),'frames',frames, 'orientations');
+                            [f_G,d_G] = vl_sift(single(transformed_I(:,:,2)),'frames',frames, 'orientations');
+                            [f_B,d_B] = vl_sift(single(transformed_I(:,:,3)),'frames',frames, 'orientations');
+                            features(i,j,:) = {[f_R,f_G,f_B], [d_R,d_G,d_B]};
+
+                        else
+                            I = single(data{i,j});
+                            [frames, descriptors] = vl_dsift(I, 'step', 10);
+                            % Grayscale image: so, for all channels, the features
+                            % and descriptors are the same, and we already
+                            % computed them.
+                            features(i,j,:) = {[frames,frames,frames], [descriptors,descriptors,descriptors]};
+                        end
+                    end
+                end
+        end
 end
 
 
