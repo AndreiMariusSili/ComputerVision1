@@ -78,14 +78,12 @@ switch color
                 for i = 1:no_categories
                     for j = 1:category_size
                         if size(data{i,j},3) == 3
-                            I = single(rgb2gray(data{i,j}));
-                            [frames] = vl_dsift(I, 'step', 10);
                             % For each feature in grayscale, compute
                             % descriptors for R, G and B.
                             transformed_I = data{i,j};
-                            [f_R,d_R] = vl_sift(single(transformed_I(:,:,1)),'frames',frames, 'orientations');
-                            [f_G,d_G] = vl_sift(single(transformed_I(:,:,2)),'frames',frames, 'orientations');
-                            [f_B,d_B] = vl_sift(single(transformed_I(:,:,3)),'frames',frames, 'orientations');
+                            [f_R,d_R] = vl_dsift(single(transformed_I(:,:,1)));
+                            [f_G,d_G] = vl_dsift(single(transformed_I(:,:,2)));
+                            [f_B,d_B] = vl_dsift(single(transformed_I(:,:,3)));
                             features(i,j,:) = {[f_R,f_G,f_B], [d_R,d_G,d_B]};
 
                         else
@@ -135,14 +133,12 @@ switch color
                 for i = 1:no_categories
                     for j = 1:category_size
                         if size(data{i,j},3) == 3
-                            I = single(rgb2gray(data{i,j}));
-                            [frames] = vl_dsift(I, 'step', 10);
                             % For each feature in grayscale, compute
                             % descriptors for R, G and B.
                             transformed_I = rgb2normedrgb(data{i,j});
-                            [f_R,d_R] = vl_sift(single(transformed_I(:,:,1)),'frames',frames, 'orientations');
-                            [f_G,d_G] = vl_sift(single(transformed_I(:,:,2)),'frames',frames, 'orientations');
-                            [f_B,d_B] = vl_sift(single(transformed_I(:,:,3)),'frames',frames, 'orientations');
+                            [f_R,d_R] = vl_dsift(single(transformed_I(:,:,1)));
+                            [f_G,d_G] = vl_dsift(single(transformed_I(:,:,2)));
+                            [f_B,d_B] = vl_dsift(single(transformed_I(:,:,3)));
                             features(i,j,:) = {[f_R,f_G,f_B], [d_R,d_G,d_B]};
 
                         else
@@ -192,14 +188,12 @@ switch color
                 for i = 1:no_categories
                     for j = 1:category_size
                         if size(data{i,j},3) == 3
-                            I = single(rgb2gray(data{i,j}));
-                            [frames, ~] = vl_dsift(I, 'step', 10);
                             % For each feature in grayscale, compute
                             % descriptors for R, G and B.
                             transformed_I = rgb2opponent(data{i,j});
-                            [f_R,d_R] = vl_sift(single(transformed_I(:,:,1)),'frames',frames, 'orientations');
-                            [f_G,d_G] = vl_sift(single(transformed_I(:,:,2)),'frames',frames, 'orientations');
-                            [f_B,d_B] = vl_sift(single(transformed_I(:,:,3)),'frames',frames, 'orientations');
+                            [f_R,d_R] = vl_dsift(single(transformed_I(:,:,1)));
+                            [f_G,d_G] = vl_dsift(single(transformed_I(:,:,2)));
+                            [f_B,d_B] = vl_dsift(single(transformed_I(:,:,3)));
                             features(i,j,:) = {[f_R,f_G,f_B], [d_R,d_G,d_B]};
 
                         else
