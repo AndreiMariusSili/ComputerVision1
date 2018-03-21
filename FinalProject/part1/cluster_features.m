@@ -16,10 +16,6 @@ function [clus_feat] = cluster_features(feat_desc, vocab)
             [~, assignments] = min(distance_to_clusters, [], 2);
             
             clus_feat{i,j} = assignments;
-            
-%             Could also using something like this, but the implementation
-%             above works fine.
-%             [~, k] = min(vl_alldist(single(desc{i,j}), centers));
         end
     end
 end

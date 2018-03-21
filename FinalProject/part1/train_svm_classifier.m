@@ -17,9 +17,10 @@ function [model] = train_svm_classifier(quant_feats,  category)
     instance_matrix = zeros(data_size, vocab_size);
     for i=1:no_categories
         for j=1:category_size
-            instance_matrix(i*j, :) = quant_feats{i,j};
+            instance_matrix(category_size*(i-1)+j, :) = quant_feats{i,j};
         end
     end
     
-    model = train(label_vector, sparse(instance_matrix));
+    best = train(label_vector, sparse(instance_matrix), '-C');
+    model = train(label_vector, sparse(instance_matrix), sprintf('-c %f', best(1)));
 end

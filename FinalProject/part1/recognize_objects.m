@@ -17,7 +17,7 @@ function [predicted_labels, accuracy, prob_estimates] = recognize_objects(quant_
     instance_matrix = zeros(data_size, vocab_size);
     for i=1:no_categories
         for j=1:category_size
-            instance_matrix(i*j, :) = quant_feats{i,j};
+            instance_matrix(category_size*(i-1)+j, :) = quant_feats{i,j};
         end
     end
     
