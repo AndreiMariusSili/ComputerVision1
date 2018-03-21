@@ -81,9 +81,9 @@ switch color
                             % For each feature in grayscale, compute
                             % descriptors for R, G and B.
                             transformed_I = data{i,j};
-                            [f_R,d_R] = vl_dsift(single(transformed_I(:,:,1)));
-                            [f_G,d_G] = vl_dsift(single(transformed_I(:,:,2)));
-                            [f_B,d_B] = vl_dsift(single(transformed_I(:,:,3)));
+                            [f_R,d_R] = vl_dsift(single(transformed_I(:,:,1)), 'step', 10);
+                            [f_G,d_G] = vl_dsift(single(transformed_I(:,:,2)), 'step', 10);
+                            [f_B,d_B] = vl_dsift(single(transformed_I(:,:,3)), 'step', 10);
                             features(i,j,:) = {[f_R,f_G,f_B], [d_R,d_G,d_B]};
 
                         else

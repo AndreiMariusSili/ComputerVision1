@@ -8,17 +8,18 @@ vocab_features = extract_features(vocab_data, 'gray', 'keypoint');
 
 %% Build vocabulary
 
-vocabulary = build_vocabulary(vocab_features, 800,  '1000images_800words_gray_keypoint');
+vocabulary = build_vocabulary(vocab_features, 800);
 
 %%
-%%
-%%
-%%
+
+
+
+
+
+
 %% Load training data and vocabulary and extract features.
 
 train_data = load_data('train', 50);
-vocabulary_file = load('vocabularies/1000images_800words_gray_keypoint/vocab.mat');
-vocabulary = vocabulary_file.vocab;
 train_features = extract_features(train_data, 'gray', 'keypoint');
 
 %% Cluster feature descriptors using vocabulary.
@@ -36,8 +37,6 @@ model = train_svm_classifier(quantized_features, "faces");
 %% Load all test data and vocabulary.
 
 test_data = load_data('teest', 50);
-vocabulary_file = load('vocabularies/1000images_800words_gray_keypoint/vocab.mat');
-vocabulary = vocabulary_file.vocab;
 test_features = extract_features(test_data, 'gray', 'keypoint');
 test_clustered_features = cluster_features(test_features, vocabulary);
 test_quantized_features = quantize_features(test_clustered_features, size(vocabulary, 2), false);
