@@ -1,9 +1,9 @@
-function [data] = load_data(stage, n)
+function [data] = load_data(data_type, n)
     % Load data into a cell array of size (category_length, n). Images can
     % be read using curly braces notation(e.g. data{1,1}).
     %
     % - ARGUMENTS
-    %       stage   stage of processing as string: "train" or "test"
+    %       type   type of data to load as string: 'vocab', 'train', or 'test'
     %       n       size of the train or test set as integer.
     %
     % - OUTPUT
@@ -11,18 +11,33 @@ function [data] = load_data(stage, n)
     
     categories = ["motorbikes", "cars", "faces", "airplanes"];
     images_by_category = containers.Map('KeyType', 'char', 'ValueType', 'any');
+    
+    switch data_type
+        case 'train'
+            stage = 'train';
+        case 'vocab'
+            stage = 'train';
+        case 'test'
+            stage = 'test';
+    end
 
     % Read data files and select top `n` image paths.
     for category=categories
+        % Read in paths from file
         image_paths_file = fopen(sprintf("../Caltech4/ImageSets/%s_%s.txt", category, stage), 'r');
-
+        image_paths = textscan(image_paths_file, '%s');
+        image_paths = image_paths{1,1};
+        
+        % Load training data from the end of the array to avoid picking the
+        % same data wtice.
+        if data_type == 'train'
+            image_paths = flipud(image_paths);
+        end
+        
+        % Generate lists of data from 
         category_images = strings(n, 1);
-        image_path = fullfile('../Caltech4/ImageData/', sprintf('%s.%s', fgetl(image_paths_file), 'jpg'));
-        c=1;
-        while ischar(image_path) && c <= n
-            category_images(c) = image_path;
-            image_path = fullfile('../Caltech4/ImageData/', sprintf('%s.%s', fgetl(image_paths_file), 'jpg'));
-            c = c+1;
+        for i=1:n
+            category_images(i) = fullfile('../Caltech4/ImageData/', sprintf('%s.%s', image_paths{i}, 'jpg'));
         end
 
         images_by_category(char(category)) = category_images;

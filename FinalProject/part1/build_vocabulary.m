@@ -1,4 +1,4 @@
-function [vocab, assignment] = build_vocabulary(features_descriptors, k, vocab_name)
+function [vocab, assignment] = build_vocabulary(features, k, vocab_name)
     % Build vocabulary from the descriptors using k-means. Output is a
     % 128xk matrix where each column is a cluster centroid. Optionally it
     % can return the assignment of the data to the clusters. Both outputs
@@ -15,13 +15,21 @@ function [vocab, assignment] = build_vocabulary(features_descriptors, k, vocab_n
     %                               the data set.
     
     % Get descriptors from input.
-    descriptors = features_descriptors{:,:,2};
-    descriptors = single(descriptors);
     
-    % Clusters descriptors using k-means.
+    % Create descriptors array where each column is a descriptor.
+    descriptors = features(:,:,2);
+    descriptors_matrix = zeros(128, 0);
+    for i=1:size(descriptors, 1)
+        for j=1:size(descriptors,2)
+            descriptors_matrix = horzcat(descriptors_matrix, descriptors{i,j});
+        end
+    end
+    
+    % Cluster descriptors using k-means.
     % TODO: we can specify different algorithm tweaks for k-means. Could be
     % a good experiment.
-    [vocab, assignment] = vl_kmeans(descriptors, k);
+    [vocab, assignment] = vl_kmeans(single(descriptors_matrix), k);
+    vocab = single(vocab);
     
     save_path = fullfile('vocabularies', vocab_name);
     if ~exist(save_path, 'dir')
