@@ -17,7 +17,7 @@ function [data] = load_data(data_type, n)
             stage = 'train';
         case 'vocab'
             stage = 'train';
-        case 'test'
+        case 'teest'
             stage = 'test';
     end
 

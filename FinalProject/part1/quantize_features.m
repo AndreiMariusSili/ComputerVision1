@@ -14,7 +14,9 @@ function [quant_feats] = quantize_features(clus_feats, vocab_size, plot)
                     'BinEdges', bin_edges);
                 quant_feats{i,j} = feature_hist.Values;
             else
-                [counts, ~] = histcounts(clus_feats{i,j});
+                [counts, ~] = histcounts(clus_feats{i,j}, ...
+                    'NumBins', vocab_size, ...
+                    'BinEdges', bin_edges);
                 quant_feats{i,j} = counts;
             end 
         end

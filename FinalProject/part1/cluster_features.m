@@ -17,7 +17,7 @@ function [clus_feat] = cluster_features(feat_desc, vocab)
             
             clus_feat{i,j} = assignments;
             
-%             Could also used something like this, but the implementation
+%             Could also using something like this, but the implementation
 %             above works fine.
 %             [~, k] = min(vl_alldist(single(desc{i,j}), centers));
         end
