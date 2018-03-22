@@ -25,7 +25,7 @@ quantized_features = quantize_features(clustered_features, size(vocabulary, 2), 
 
 %% Train SVM
 
-[data, targets] = preprocess_data(quantized_features, "motorbikes");
+[data, targets] = preprocess_data(quantized_features, "airplanes");
 model = svm_train(data, targets);
 
 %% Load all test data and vocabulary.
@@ -35,7 +35,8 @@ test_features = extract_features(test_data, 'gray', 'keypoint');
 test_clustered_features = cluster_features(test_features, vocabulary);
 test_quantized_features = quantize_features(test_clustered_features, size(vocabulary, 2), false);
 
-[data, targets] = preprocess_data(test_quantized_features, "motorbikes");
+%%
+[data, targets] = preprocess_data(test_quantized_features, "airplanes");
 
 %% Recognize objects
 

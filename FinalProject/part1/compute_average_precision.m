@@ -1,5 +1,6 @@
 function [avg_prec] = compute_average_precision(targets, dec_vals)
     
+    targets(targets == -1) = 0;
     % Sort targets based on predict probability estimates.
     [~, sorted_indices] = sort(dec_vals, 'descend');
     sorted_targets = targets(sorted_indices);

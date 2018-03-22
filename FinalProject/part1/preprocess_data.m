@@ -9,7 +9,7 @@ function [data, targets] = preprocess_data(cell_array, category)
     
     % Build target vector as binary vector.
     indices = 1:data_size;
-    targets = zeros(no_categories*category_size, 1);
+    targets = -ones(no_categories*category_size, 1);
     targets(indices>(category_idx-1)*category_size & indices <= category_idx*category_size) = 1;
     
     % Morph cell array into feature matrix.
