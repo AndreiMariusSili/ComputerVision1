@@ -45,5 +45,5 @@ test_quantized_features = quantize_features(test_clustered_features, size(vocabu
 
 %% Create HTML file
  % TODO: need to do thos for every model in "models" folder.
-load(fullfile('models', 'gray_keypoint_400_50'), 'model');
+load(fullfile('models', 'gray_keypoint_4000_50'), 'model');
 HTML_write(model);

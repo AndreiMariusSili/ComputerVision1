@@ -1,6 +1,6 @@
 function model_generator()
 %     sift_colours = ["gray","RGB", "rgb","opponent"];
-    sift_colours = ["RGB", "rgb","opponent"];
+    sift_colours = ["gray","RGB", "rgb","opponent"];
     sift_types = ["keypoint", "dense"];
     vocab_sizes = [400, 800, 1600, 2000, 4000];
     train_data_sizes = [50, 100, 150];
@@ -15,7 +15,7 @@ function model_generator()
             test_feats = extract_features(test_data, colour, type);
             for train_data_size=train_data_sizes
                 fprintf('Loading train data and extracting features: %d images per class.\n', train_data_size);
-                train_data = load_data("train", train_data_size);
+                [train_data] = load_data("train", train_data_size);
                 train_feats = extract_features(train_data, colour, type);
                 
                 for vocab_size=vocab_sizes
@@ -39,7 +39,7 @@ function model_generator()
                     model = struct;
                     for category=categories
                         [train_matrix, train_targets] = preprocess_data(train_quant_feats, category);
-                        [test_matrix, test_targets, paths] = preprocess_data(test_quant_feats, category);
+                        [test_matrix, test_targets, paths] = preprocess_data(test_quant_feats, category, test_paths);
                         
                         classifier = svm_train(train_matrix, train_targets);
                         [pred_labels, accuracy, test_dec_vals] = svm_predict(test_matrix, test_targets, classifier);
@@ -58,8 +58,8 @@ function model_generator()
                         model.(category).type = type;
                         model.(category).vocab_size = vocab_size;
                         model.(category).train_data_size = train_data_size;
-                        model.(category).no_test_data = size(test_data,1);
                         model.(category).sorted_paths = sorted_paths;
+                        model.(category).no_test_data = size(test_matrix,1);
                     end
                     model.map = (model.motorbikes.avg_prec ...
                                 + model.cars.avg_prec ...
