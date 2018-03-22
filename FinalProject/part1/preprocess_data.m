@@ -1,4 +1,6 @@
-function [data, targets] = preprocess_data(cell_array, category)
+function [data, targets, paths] = preprocess_data(cell_array, category, cell_array_paths)
+
+    
     
     % Find the index of the category in the cell array.
     categories = ["motorbikes", "cars", "faces", "airplanes"];
@@ -15,9 +17,13 @@ function [data, targets] = preprocess_data(cell_array, category)
     % Morph cell array into feature matrix.
     vocab_size = size(cell_array{1,1}, 2);
     data = zeros(data_size, vocab_size);
+    paths = strings(data_size, 1);
     for i=1:no_categories
         for j=1:category_size
             data(category_size*(i-1)+j, :) = cell_array{i,j};
+            if nargin == 3
+                paths(category_size*(i-1)+j) = cell_array_paths{i,j};
+            end
         end
     end
 end

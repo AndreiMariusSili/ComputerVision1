@@ -6,7 +6,7 @@ function model_generator()
     categories = ["motorbikes", "cars", "faces", "airplanes"];
     
     fprintf('Loading test data: 50 images per class.\n')
-    test_data = load_data("test", 50);
+    [test_data, test_paths] = load_data("test", 50);
     
     
     for colour=sift_colours
@@ -38,11 +38,14 @@ function model_generator()
                     model = struct;
                     for category=categories
                         [train_data, train_targets] = preprocess_data(train_quant_feats, category);
-                        [test_data, test_targets] = preprocess_data(test_quant_feats, category);
+                        [test_data, test_targets, paths] = preprocess_data(test_quant_feats, category, test_paths);
                         
                         classifier = svm_train(train_data, train_targets);
                         [pred_labels, accuracy, test_dec_vals] = svm_predict(test_data, test_targets, classifier);
                         [avg_prec] = compute_average_precision(test_targets, test_dec_vals);
+                        
+                        [~,indices] = sort(test_dec_vals, 'descend');
+                        sorted_paths = paths([indices]);
                         
                         model.(category) = struct;
                         model.(category).classifier = classifier;
@@ -54,6 +57,8 @@ function model_generator()
                         model.(category).type = type;
                         model.(category).vocab_size = vocab_size;
                         model.(category).train_data_size = train_data_size;
+                        model.(category).no_test_data = size(test_data,1);
+                        model.(category).sorted_paths = sorted_paths;
                     end
                     model.map = (model.motorbikes.avg_prec ...
                                 + model.cars.avg_prec ...

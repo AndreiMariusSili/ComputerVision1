@@ -30,15 +30,20 @@ model = svm_train(data, targets);
 
 %% Load all test data and vocabulary.
 
-test_data = load_data("test", 50);
+[test_data, test_paths] = load_data("test", 50);
 test_features = extract_features(test_data, 'gray', 'keypoint');
 test_clustered_features = cluster_features(test_features, vocabulary);
 test_quantized_features = quantize_features(test_clustered_features, size(vocabulary, 2), false);
 
 %%
-[data, targets] = preprocess_data(test_quantized_features, "airplanes");
+[data, targets, paths] = preprocess_data(test_quantized_features, "airplanes", test_paths);
 
 %% Recognize objects
 
 [predicted_labels, accuracy, decision_values] = svm_predict(data, targets, model);
 [average_precison] = compute_average_precision(targets, decision_values);
+
+%% Create HTML file
+ % TODO: need to do thos for every model in "models" folder.
+load(fullfile('models', 'gray_keypoint_400_50'), 'model');
+HTML_write(model);

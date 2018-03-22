@@ -1,4 +1,4 @@
-function [data] = load_data(data_type, n)
+function [data, paths] = load_data(data_type, n)
     % Load data into a cell array of size (category_length, n). Images can
     % be read using curly braces notation(e.g. data{1,1}).
     %
@@ -47,6 +47,7 @@ function [data] = load_data(data_type, n)
 
     % Load images into cell array at position (category_index, image index).
     data = cell(length(categories), n);
+    paths = cell(length(categories), n);
     for i=1:length(categories)
         for j =1:n
             category_list = images_by_category(char(categories(i)));
@@ -54,6 +55,7 @@ function [data] = load_data(data_type, n)
             category_image = imread(category_image_path);
             
             data(i,j) = {category_image};
+            paths(i,j) = {category_image_path};
         end
     end
 end
