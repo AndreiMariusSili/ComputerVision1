@@ -13,11 +13,11 @@ function [data] = load_data(data_type, n)
     images_by_category = containers.Map('KeyType', 'char', 'ValueType', 'any');
     
     switch data_type
-        case 'train'
+        case "train"
             stage = 'train';
-        case 'vocab'
+        case "vocab"
             stage = 'train';
-        case 'teest'
+        case "test"
             stage = 'test';
     end
 
