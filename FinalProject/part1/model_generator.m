@@ -19,6 +19,11 @@ function model_generator()
                 
                 for vocab_size=vocab_sizes
                     vocab_name = sprintf('%s_%s_%d', colour, type, vocab_size);
+                    if ~exist(fullfile('vocabularies', strcat(vocab_name, '.mat')), 'file')
+                        fprintf('Vocabulary %s does not exist. Skipping...\n', vocab_name);
+                        continue
+                    end
+                    
                     load(fullfile('vocabularies', vocab_name), 'vocabulary');
                     fprintf('Quantizing features for test and training data according to vocabulary %s.\n', vocab_name);
                     
@@ -36,12 +41,13 @@ function model_generator()
                         [test_data, test_targets] = preprocess_data(test_quant_feats, category);
                         
                         classifier = svm_train(train_data, train_targets);
-                        [pred_labels, ~, test_dec_vals] = svm_predict(test_data, test_targets, classifier);
+                        [pred_labels, accuracy, test_dec_vals] = svm_predict(test_data, test_targets, classifier);
                         [avg_prec] = compute_average_precision(test_targets, test_dec_vals);
                         
                         model.(category) = struct;
                         model.(category).classifier = classifier;
                         model.(category).pred_labels = pred_labels;
+                        model.(category).accuracy = accuracy(1);
                         model.(category).avg_prec = avg_prec;
                         
                         model.(category).colour = colour;
@@ -49,6 +55,10 @@ function model_generator()
                         model.(category).vocab_size = vocab_size;
                         model.(category).train_data_size = train_data_size;
                     end
+                    model.map = (model.motorbikes.avg_prec ...
+                                + model.cars.avg_prec ...
+                                + model.faces.avg_prec ...
+                                + model.airplanes.avg_prec) / 4 ;
                     save(fullfile('models', model_name), 'model'); 
                     toc
                 end

@@ -1,5 +1,6 @@
 function [avg_prec] = compute_average_precision(targets, dec_vals)
     
+    % Remove negative values of targets for cumulative sum.
     targets(targets == -1) = 0;
     % Sort targets based on predict probability estimates.
     [~, sorted_indices] = sort(dec_vals, 'descend');
