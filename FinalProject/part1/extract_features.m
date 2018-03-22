@@ -11,7 +11,7 @@ function [features] = extract_features(data, color, method)
 
 [no_categories, category_size] = size(data);
 switch color
-    case 'gray'
+    case "gray"
         % Create cell matching data dimensionality.
         features = cell(no_categories, category_size, 2);
         switch method
@@ -42,7 +42,7 @@ switch color
                     end
                 end
         end
-    case 'RGB'
+    case "RGB"
         % Create cell matching data dimensionality.
         features = cell(no_categories, category_size, 2);
         switch method
@@ -97,7 +97,7 @@ switch color
                     end
                 end
         end
-    case 'rgb'
+    case "rgb"
         % Create cell matching data dimensionality.
         features = cell(no_categories, category_size, 2);
         switch method
@@ -152,7 +152,7 @@ switch color
                     end
                 end
         end
-    case 'opponent'
+    case "opponent"
         % Create cell matching data dimensionality.
         features = cell(no_categories, category_size, 2);
         switch method
