@@ -1,5 +1,6 @@
 function model_generator()
-    sift_colours = ["gray", "RGB", "rgb","opponent"];
+%     sift_colours = ["gray","RGB", "rgb","opponent"];
+    sift_colours = ["RGB", "rgb","opponent"];
     sift_types = ["keypoint", "dense"];
     vocab_sizes = [400, 800, 1600, 2000, 4000];
     train_data_sizes = [50, 100, 150];
@@ -37,11 +38,11 @@ function model_generator()
                     fprintf('Generating model: %s. \n', model_name);
                     model = struct;
                     for category=categories
-                        [train_data, train_targets] = preprocess_data(train_quant_feats, category);
-                        [test_data, test_targets] = preprocess_data(test_quant_feats, category);
+                        [train_matrix, train_targets] = preprocess_data(train_quant_feats, category);
+                        [test_matrix, test_targets] = preprocess_data(test_quant_feats, category);
                         
-                        classifier = svm_train(train_data, train_targets);
-                        [pred_labels, accuracy, test_dec_vals] = svm_predict(test_data, test_targets, classifier);
+                        classifier = svm_train(train_matrix, train_targets);
+                        [pred_labels, accuracy, test_dec_vals] = svm_predict(test_matrix, test_targets, classifier);
                         [avg_prec] = compute_average_precision(test_targets, test_dec_vals);
                         
                         model.(category) = struct;
