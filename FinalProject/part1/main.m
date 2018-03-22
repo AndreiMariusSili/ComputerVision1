@@ -42,8 +42,3 @@ test_quantized_features = quantize_features(test_clustered_features, size(vocabu
 
 [predicted_labels, accuracy, decision_values] = svm_predict(data, targets, model);
 [average_precison] = compute_average_precision(targets, decision_values);
-
-%% Create HTML file
- % TODO: need to do thos for every model in "models" folder.
-load(fullfile('models', 'gray_keypoint_4000_50'), 'model');
-HTML_write(model);
