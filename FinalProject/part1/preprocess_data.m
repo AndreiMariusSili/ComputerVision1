@@ -9,7 +9,8 @@ function [data, targets, paths] = preprocess_data(cell_array, category, cell_arr
     [no_categories, category_size] = size(cell_array);
     data_size = no_categories*category_size;
     
-    % Build target vector as binary vector.
+    % Build target vector -1;1 vector. -1 for negative and 1 for positive
+    % examples. 
     indices = 1:data_size;
     targets = -ones(no_categories*category_size, 1);
     targets(indices>(category_idx-1)*category_size & indices <= category_idx*category_size) = 1;
