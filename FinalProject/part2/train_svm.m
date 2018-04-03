@@ -59,7 +59,7 @@ testset.labels = [];
 testset.features = [];
 for i = 1:size(data.images.data, 4)
     
-    res = vl_simplenn(net, data.images.data(:, :,:, i));
+    res = vl_simplenn(net, data.images.data(:,:,:, i));
     feat = res(end-3).x; feat = squeeze(feat);
     
     if(data.images.set(i) == 1)
