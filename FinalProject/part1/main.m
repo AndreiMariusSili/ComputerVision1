@@ -42,3 +42,5 @@ test_quantized_features = quantize_features(test_clustered_features, size(vocabu
 
 [predicted_labels, accuracy, decision_values] = svm_predict(data, targets, model);
 [average_precison] = compute_average_precision(targets, decision_values);
+
+%%
