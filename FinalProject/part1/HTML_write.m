@@ -5,8 +5,9 @@ function HTML_write(model)
 
                         
     sift_step_size = '10'; % NOT SURE
-    sift_block_sizes= '4x4'; % NOT SURE
+    sift_block_sizes= 'default'; % NOT SURE
     sift_method= model.faces.type;
+    sift_colour = model.faces.colour;
     vocabulaty_size= string(model.faces.vocab_size);
     sift_positive= string(model.faces.train_data_size);
     sift_negative= string(model.faces.train_data_size*3);
@@ -49,8 +50,9 @@ function HTML_write(model)
             fprintf(fid, '\t\t<h1>Settings</h1>\n');
             fprintf(fid, '\t\t<table>\n');
                 fprintf(fid, '\t\t\t<tr><th>SIFT step size</th><td>%s px</td></tr>\n',sift_step_size);
-                fprintf(fid, '\t\t\t<tr><th>SIFT block sizes</th><td>%s pixels</td></tr>\n', sift_block_sizes);
+                fprintf(fid, '\t\t\t<tr><th>SIFT block sizes</th><td>%s</td></tr>\n', sift_block_sizes);
                 fprintf(fid, '\t\t\t<tr><th>SIFT method</th><td>%s-SIFT</td></tr>\n', sift_method);
+                fprintf(fid, '\t\t\t<tr><th>SIFT colour</th><td>%s</td></tr>\n', sift_colour);
                 fprintf(fid, '\t\t\t<tr><th>Vocabulary size</th><td>%s words</td></tr>\n', vocabulaty_size);
                 fprintf(fid, '\t\t\t<tr><th>SVM training data</th><td>%s positive, %s negative per class</td></tr>\n',sift_positive, sift_negative);
                 fprintf(fid, '\t\t\t<tr><th>SVM kernel type</th><td>%s</td></tr>\n',sift_kernel_type);

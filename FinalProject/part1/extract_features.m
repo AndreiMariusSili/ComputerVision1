@@ -97,7 +97,7 @@ switch color
                     end
                 end
         end
-    case "rgb"
+    case "normRGB"
         % Create cell matching data dimensionality.
         features = cell(no_categories, category_size, 2);
         switch method

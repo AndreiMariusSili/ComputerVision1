@@ -1,8 +1,12 @@
 function vocabulary_generator()
     
-    sift_colours = ["rgb","opponent"];
-    sift_types = ["keypoint"];
-    vocab_sizes = [400, 800, 1600, 2000, 4000];
+%     sift_colours = ["gray", "RGB", "normRGB","opponent"];
+%     sift_types = ["dense", "keypoint"];
+%     vocab_sizes = [400, 800, 1600, 2000, 4000];
+
+    sift_colours = ["normRGB"];
+    sift_types = ["dense"];
+    vocab_sizes = [2000];
     
     vocab_data = load_data('vocab', 250);
     

@@ -1,9 +1,13 @@
 function model_generator()
-%     sift_colours = ["gray","RGB", "rgb","opponent"];
-    sift_colours = ["gray","RGB", "rgb","opponent"];
-    sift_types = ["keypoint", "dense"];
-    vocab_sizes = [400, 800, 1600, 2000, 4000];
-    train_data_sizes = [150];
+%     sift_colours = ["gray","RGB", "normRGB","opponent"];
+%     sift_types = ["keypoint", "dense"];
+%     vocab_sizes = [400, 800, 1600, 2000, 4000];
+%     train_data_sizes = [50, 100, 150];
+    sift_colours = ["normRGB"];
+    sift_types = ["dense"];
+    vocab_sizes = [2000];
+    train_data_sizes = [50, 100];
+    
     categories = ["motorbikes", "cars", "faces", "airplanes"];
     
     fprintf('Loading test data: 50 images per class.\n')
