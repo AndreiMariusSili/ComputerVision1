@@ -82,7 +82,7 @@ function analyse_results()
     ylim([0.8,1])
     legend('N=600', 'N=400', 'N=200');
     hold off;
-    print('figures/map_keypoint', '-dpng')
+%     print('figures/map_keypoint', '-dpng')
     
     figure;
     hold on;
@@ -95,7 +95,7 @@ function analyse_results()
     ylim([0.8,1])
     legend('N=600', 'N=400', 'N=200', 'Location', 'southeast');
     hold off;
-    print('figures/map_dense', '-dpng')
+%     print('figures/map_dense', '-dpng')
     
     figure;
     hold on;
@@ -108,5 +108,5 @@ function analyse_results()
     ylabel('MAP')
     legend('RGB', 'rgb', 'opponent', 'gray', 'Location', 'southeast');
     hold off;
-    print('figures/map_colour', '-dpng')
+%     print('figures/map_colour', '-dpng')
 end

@@ -1,8 +1,8 @@
-function ydata = tsne(X, labels, no_dims, initial_dims, perplexity)
+function ydata = lib_tsne(X, labels, no_dims, initial_dims, perplexity)
 %TSNE Performs symmetric t-SNE on dataset X
 %
-%   mappedX = tsne(X, labels, no_dims, initial_dims, perplexity)
-%   mappedX = tsne(X, labels, initial_solution, perplexity)
+%   mappedX = lib_tsne(X, labels, no_dims, initial_dims, perplexity)
+%   mappedX = lib_tsne(X, labels, initial_solution, perplexity)
 %
 % The function performs symmetric t-SNE on the NxD dataset X to reduce its 
 % dimensionality to no_dims dimensions (default = 2). The data is 
