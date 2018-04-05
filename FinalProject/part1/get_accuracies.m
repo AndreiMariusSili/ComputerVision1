@@ -11,15 +11,14 @@ function get_accuracies()
         load(fullfile('models', file.name), 'model');
         accuracy = (model.motorbikes.accuracy + model.cars.accuracy + model.faces.accuracy + model.airplanes.accuracy)/4;
         filename = strcat('accurac','_',model.faces.colour,'_',model.faces.type,'_',string(model.faces.vocab_size),'_',string(model.faces.train_data_size), '.html');
-        display(filename + ": " + accuracy )
         
         if model.faces.vocab_size == 2000
             accuracy = accuracy/100;
             list = [list, accuracy];
+            display(filename + ": " + accuracy )
+            model.faces.type
             if model.faces.train_data_size == 50
-                
-                
-                plot(N, list, 'LineWidth', 2);
+                plot(N, list([2 1 3]), 'LineWidth', 2);
                 list = [];
             end
             
@@ -47,6 +46,6 @@ function get_accuracies()
     title('Mean Accuracy(vocabulary size = 2000)')
     xlabel('Training Set Size')
     ylabel('Accuracy')
-    legend('RGB', 'Opponent', 'rgb', 'Gray Keypoints','Gray Dense', 'Location', 'southeast');
+    legend('RGB', 'Gray Dense','Gray Keypoints','rgb', 'Opponent','Location', 'southeast');
     hold off;
 end
